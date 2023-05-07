@@ -44,13 +44,20 @@ pub fn build(b: *std.Build) !void {
         artifact.addIncludePath("lib/gl2/include");
         artifact.addCSourceFile("lib/gl2/src/glad.c", &.{});
         if (target.isWindows()) {
-            artifact.addVcpkgPaths(.dynamic) catch @panic("vcpkg not installed");
-            if (artifact.vcpkg_bin_path) |bin_path| {
-                for (&[_][]const u8{"glfw3.dll"}) |dll| {
-                    const src_dll = try std.fs.path.join(b.allocator, &.{ bin_path, dll });
-                    b.installBinFile(src_dll, dll);
-                }
-            }
+            // artifact.addVcpkgPaths(.dynamic) catch @panic("vcpkg not installed");
+            // if (artifact.vcpkg_bin_path) |bin_path| {
+            //     for (&[_][]const u8{"glfw3.dll"}) |dll| {
+            //         const src_dll = try std.fs.path.join(b.allocator, &.{ bin_path, dll });
+            //         b.installBinFile(src_dll, dll);
+            //     }
+            // }
+
+            const glfw_path = "D:\\zig\\glfw-3.3.8.bin.WIN64\\";
+            artifact.addIncludePath(glfw_path ++ "include");
+            artifact.addLibraryPath(glfw_path ++ "lib-static-ucrt");
+            b.installBinFile(glfw_path ++ "lib-static-ucrt\\glfw3.dll", "glfw3.dll");
+
+            //artifact.addIncludePath("D:\\zig\\glfw-3.3.8.bin.WIN64\\include");
             artifact.linkSystemLibrary("glfw3dll");
             artifact.linkSystemLibrary("opengl32");
         } else if (target.isDarwin()) {

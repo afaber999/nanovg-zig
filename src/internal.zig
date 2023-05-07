@@ -1147,7 +1147,7 @@ pub const Context = struct {
 
     pub fn resetScissor(ctx: *Context) void {
         const state = ctx.getState();
-        @memset(&state.scissor.xform, 0);
+        // AF FIX @memset(&state.scissor.xform, 0);
         state.scissor.extent[0] = -1;
         state.scissor.extent[1] = -1;
     }
